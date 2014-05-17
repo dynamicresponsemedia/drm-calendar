@@ -6,7 +6,7 @@
 
 ( ($) ->
     class window.DrmCalendar
-        constructor: (@calendarClass = 'drm-calendar', @daysPerWeek = 7, @view = 'week', @addHolidays = yes) ->
+        constructor: (@calendarClass = 'drm-calendar', @daysPerWeek = 7, @view = 'date', @addHolidays = yes) ->
             self = @
             self.body = $ 'body'
             self.events = []
@@ -22,12 +22,15 @@
             self.addEventForm = self.calendar.find('form.drm-calendar-new-event').hide()
             self.showEventFormButton = self.calendar.find 'button.drm-show-event-form'
             self.calendarViewActiveButton = self.calendar.find(".drm-calendar-view-nav button[data-view=#{self.view}]").addClass 'active'
-            self.eventClass = 'events'
+            self.eventClass = 'drm-events'
             self.classes =
                 weekend: 'drm-cal-weekend'
                 muted: 'drm-cal-muted'
                 holiday: 'drm-cal-holiday'
                 today: 'drm-cal-today'
+                month: 'drm-month'
+                week: 'drm-week'
+                date: 'drm-date'
 
             self.months = [             
                 'January'
@@ -411,6 +414,10 @@
             if self.calendar.length > 0
                 self.createCalendar self.currentMonth, self.currentDate, self.currentYear
 
+            self.calendar.on 'click', '.drm-calendar-date-prev, .drm-calendar-date-next', ->
+                direction = $(@).data 'dir'
+                self.advanceDate.call @, direction
+
             self.calendar.on 'click', '.drm-calendar-week-prev, .drm-calendar-week-next', ->
                 direction = $(@).data 'dir'
                 self.advanceWeek.call @, direction
@@ -492,7 +499,7 @@
                 self.addEventForm.find(':input').val ''
                 self.addEventForm.find('input:checked').prop 'checked', false
 
-            self.calendar.on 'click', "td:not(.#{self.classes.muted})", ->
+            self.calendar.on 'click', ".drm-date", ->
                 that = $ @
                 month = self.months[that.data('month')]
                 date = that.data 'date'
@@ -509,7 +516,7 @@
             # show event details
             self.calendar.on 'click', "ul.#{self.eventClass} a", (e) ->
                 that = $ @
-                day = that.closest('td')
+                day = that.closest('.drm-date')
                 eventId = that.data 'event'
                 fullDate =
                     month: self.months[day.data('month')]
@@ -533,10 +540,11 @@
             self.body.on 'click', 'div.drm-calendar-event-details button.drm-event-close', self.removeEventDetails
 
         getDaysInMonth: (month, year) ->
+            month = month + 1
             new Date(year, month, 0).getDate()
 
-        getDayOfWeek: (month, year, day) ->
-            day = new Date year, month, day
+        getDayOfWeek: (month, date, year) ->
+            day = new Date year, month, date
             day.getDay()
 
         getWeeksInMonth: (numberDays, dayShift) =>
@@ -548,7 +556,7 @@
             year = calendarInner.data 'year'
 
             if month is @currentMonth and year is @currentYear
-                calendarInner.find("td[data-date=#{@currentDate}]").addClass @classes.today
+                calendarInner.find(".drm-date[data-date=#{@currentDate}]").addClass @classes.today
 
         createEvent: (newEvent) =>
             id = @events.length
@@ -570,17 +578,22 @@
 
         addNewCalendarEvent: (events, dates) =>
             calendarInner = @calendar.find "div.#{@calendarInnerClass}"
+
             if @view is 'month'
-                calendarItem = calendarInner.find "td[data-date=#{dates}]"
-            else if @view is 'week' and (events.allDayEvent is true or !events.time?)
-                calendarItem = calendarInner.find "td[data-date=#{dates}][data-hour='All Day Event']"
-            else if @view is 'week' and events.allDayEvent is false
+                calendarItem = calendarInner.find ".drm-date[data-date=#{dates}]"
+            else if (events.allDayEvent or !events.time?)
+                calendarItem = calendarInner.find ".drm-date[data-date=#{dates}][data-hour='All Day Event']"
+            else if !events.allDayEvent
                 # find hour td element
-                re = new RegExp '[0:]','gi'
+                re = new RegExp '^0?','gi'
+                re2 = new RegExp ':[0-9]{2}', 'gi'
                 hour = events.time.replace re, ''
-                calendarItem = calendarInner.find "td[data-date=#{dates}][data-hour=#{hour}]"
+                hour = hour.replace re2, ''
+                calendarItem = calendarInner.find ".drm-date[data-date=#{dates}][data-hour=#{hour}]"
+
             eventList = calendarItem.find "ul.#{@eventClass}"
             length = eventList.length
+            eventHtml = if events.time? then "<a href='#' data-event='#{events.id}'><span class='drm-time'>#{events.time}:</span><span class='drm-event'>#{events.name}</span></a>" else "<a href='#' data-event='#{events.id}'><span class='drm-event drm-all-day-event'>#{events.name}</span></a>"
 
             if length is 0
                 eventList = $ '<ul></ul>',
@@ -589,7 +602,7 @@
                 eventList.appendTo calendarItem
             
             item = $ '<li></li>',
-                html: "<a href='#' data-event='#{events.id}'>#{events.name}</a>"
+                html: eventHtml
             
             item.appendTo eventList
 
@@ -681,8 +694,8 @@
 
         getDatesInWeek: (currentMonth, currentDate, currentYear) =>
             self = @
-            firstDay = self.getDayOfWeek currentMonth, currentYear, 1
-            numberDays = self.getDaysInMonth (currentMonth + 1), currentYear
+            firstDay = self.getDayOfWeek currentMonth, 1, currentYear
+            numberDays = self.getDaysInMonth currentMonth, currentYear
             dayShift = if firstDay is self.daysPerWeek then 0 else firstDay
             currentDay = self.getDayOfWeek currentMonth, currentDate, currentYear
             numberWeeks = self.getWeeksInMonth numberDays, dayShift
@@ -724,25 +737,27 @@
         getEventWeekNum: (dayNum, day, numberDays, dayShift) =>
             self = @
             calendarInner = self.calendar.find "div.#{@calendarInnerClass}"
-            weeks = if self.view is 'month' then calendarInner.find('tbody').find 'tr.drm-week' else calendarInner.find 'tbody.drm-week'
+            weeks = calendarInner.find '.drm-week'
             numberWeeks = self.getWeeksInMonth numberDays, dayShift
             lastWeekLength = weeks.eq(numberWeeks).length
 
             if dayNum is 'last' and dayShift <= day
-                if lastWeekLength < day then (numberWeeks - 2) else numberWeeks - 1
+                eventWeekNum = if lastWeekLength < day then (numberWeeks - 2) else numberWeeks - 1
             else if dayNum is 'last' and dayShift > day
-                numberWeeks - 2
+                eventWeekNum = numberWeeks - 2
             else
-                parseInt(dayNum, 10) - 1
+                eventWeekNum = parseInt(dayNum, 10) - 1
+
+            eventWeekNum = if dayShift <= day then eventWeekNum else eventWeekNum + 1
 
         addYearlyEvents: (events, eventDates) =>
             self = @
             calendarInner = self.calendar.find "div.#{@calendarInnerClass}"
             currentMonth = calendarInner.data 'month'
             currentYear = calendarInner.data 'year'
-            weeks = if self.view is 'month' then calendarInner.find('tbody').find 'tr.drm-week' else calendarInner.find 'tbody.drm-week'
-            firstDay = self.getDayOfWeek currentMonth, currentYear, 1
-            numberDays = self.getDaysInMonth (currentMonth + 1), currentYear
+            weeks = calendarInner.find '.drm-week'
+            firstDay = self.getDayOfWeek currentMonth, 1, currentYear
+            numberDays = self.getDaysInMonth currentMonth, currentYear
             dayShift = if firstDay is self.daysPerWeek then 0 else firstDay
             month = $.inArray events.month, self.months
 
@@ -753,8 +768,12 @@
                     eventWeekNum = self.getEventWeekNum events.dayNum, day, numberDays, dayShift
 
                     if currentMonth is month
-                        eventWeek = if dayShift <= day then eventWeek = weeks.eq eventWeekNum else eventWeek = weeks.eq eventWeekNum + 1
-                        eventDates.push eventWeek.find("td.drm-date[data-day=#{day}]").data 'date'
+                        weeks.each ->
+                            that = $ @
+                            firstDay = that.find(".#{self.classes.date}").first().data 'date'
+                            weekInfo = self.getDatesInWeek currentMonth, firstDay, currentYear
+                            if eventWeekNum is weekInfo.weekNum
+                                eventDates.push that.find(".#{self.classes.date}[data-day=#{day}]").data 'date'
             else
                 eventDates.push parseInt(events.eventDate, 10)
                 
@@ -763,9 +782,9 @@
             calendarInner = self.calendar.find "div.#{@calendarInnerClass}"
             currentMonth = calendarInner.data 'month'
             currentYear = calendarInner.data 'year'
-            weeks = if self.view is 'month' then calendarInner.find('tbody').find 'tr.drm-week' else calendarInner.find 'tbody.drm-week'
-            firstDay = self.getDayOfWeek currentMonth, currentYear, 1
-            numberDays = self.getDaysInMonth (currentMonth + 1), currentYear
+            weeks = calendarInner.find '.drm-week'
+            firstDay = self.getDayOfWeek currentMonth, 1, currentYear
+            numberDays = self.getDaysInMonth currentMonth, currentYear
             dayShift = if firstDay is self.daysPerWeek then 0 else firstDay
 
             # add monthly events
@@ -774,7 +793,7 @@
                     day = $.inArray value, self.days
                     eventWeekNum = self.getEventWeekNum events.dayNum, day, numberDays, dayShift
                     eventWeek = if dayShift <= day then eventWeek = weeks.eq eventWeekNum else eventWeek = weeks.eq eventWeekNum + 1
-                    eventDates.push eventWeek.find("td.drm-date[data-day=#{day}]").data 'date'
+                    eventDates.push eventWeek.find(".#{self.classes.date}[data-day=#{day}]").data 'date'
             else
                 eventDates.push parseInt(events.eventDate, 10)
 
@@ -783,7 +802,7 @@
             calendarInner = self.calendar.find "div.#{@calendarInnerClass}"
             currentMonth = calendarInner.data 'month'
             currentYear = calendarInner.data 'year'
-            weeks = if self.view is 'month' then calendarInner.find('tbody').find "tr.drm-week" else calendarInner.find "tbody.drm-week"
+            weeks = calendarInner.find '.drm-week'
 
             # events that occur every 2 weeks
             if events.day
@@ -792,22 +811,22 @@
                     day = $.inArray value, self.days
                     length = weeks.length
                     weekPattern = if weekInfo.weekNum % 2 is 0 then 'even' else 'odd'
-                    eventWeeks = if self.view is 'month' then calendarInner.find('tbody').find "tr.#{weekPattern}-week" else calendarInner.find "tbody.#{weekPattern}-week"
+                    eventWeeks = calendarInner.find ".#{weekPattern}-week"
 
                     $.each eventWeeks, (key, value) ->
                         that = $ value
-                        weekLength = that.find("td:not(.#{self.classes.muted})").length
-                        eventDates.push that.find("td.drm-date[data-day=#{day}]").data('date')
+                        weekLength = that.find(".drm-date").length
+                        eventDates.push that.find(".#{self.classes.date}[data-day=#{day}]").data('date')
 
         addWeeklyEvents: (events, eventDates) =>
             self = @
             calendarInner = self.calendar.find "div.#{@calendarInnerClass}"
             currentMonth = calendarInner.data 'month'
             currentYear = calendarInner.data 'year'
-            firstDay = self.getDayOfWeek currentMonth, currentYear, 1
-            numberDays = self.getDaysInMonth (currentMonth + 1), currentYear
+            firstDay = self.getDayOfWeek currentMonth, 1, currentYear
+            numberDays = self.getDaysInMonth currentMonth, currentYear
             dayShift = if firstDay is self.daysPerWeek then 0 else firstDay
-            weeks = if self.view is 'month' then calendarInner.find('tbody').find 'tr.drm-week' else calendarInner.find 'tbody.drm-week'
+            weeks = calendarInner.find '.drm-week'
 
             # weekly events
             if events.day
@@ -816,21 +835,21 @@
                     length = weeks.length
                     $.each weeks, (key, value) ->
                         that = $ value
-                        days = if self.view is 'month' then that.find "td.drm-date" else that.find "td.drm-date[data-hour='All Day Event']"
+                        days = if self.view is 'month' then that.find ".#{self.classes.date}" else that.find ".#{self.classes.date}[data-hour='All Day Event']"
                         weekLength = days.length
                         if key is 0 and length isnt 1
-                            if dayShift <= day then eventDates.push that.find("td.drm-date[data-day=#{day}]").data('date')
+                            if dayShift <= day then eventDates.push that.find(".#{self.classes.date}[data-day=#{day}]").data('date')
                         else if key is (length - 1) and length isnt 1
-                            if day < weekLength then eventDates.push that.find("td.drm-date[data-day=#{day}]").data('date')
+                            if day < weekLength then eventDates.push that.find(".#{self.classes.date}[data-day=#{day}]").data('date')
                         else
-                            eventDates.push that.find("td.drm-date[data-day=#{day}]").data('date')
+                            eventDates.push that.find(".#{self.classes.date}[data-day=#{day}]").data('date')
 
             eventDates
 
         addDailyEvents: (events, eventDates) =>
             self = @
             calendarInner = self.calendar.find "div.#{@calendarInnerClass}"
-            days = if self.view is 'month' then calendarInner.find "tbody td.drm-date" else calendarInner.find "td.drm-date[data-hour='All Day Event']"
+            days = if self.view is 'month' then calendarInner.find ".#{self.classes.date}" else calendarInner.find ".#{self.classes.date}[data-hour='All Day Event']"
             days.each ->
                 eventDates.push $(@).data 'date'
 
@@ -869,12 +888,12 @@
         highlightWeekends: =>
             self = @
             calendarInner = self.calendar.find "div.#{@calendarInnerClass}"
-            weeks = if self.view is 'month' then calendarInner.find('tbody').find 'tr.drm-week' else calendarInner.find 'tbody.drm-week'
+            weeks = calendarInner.find '.drm-week'
 
             $.each weeks, ->
                 that = $ @
                 $.each self.weekend, (key, value) ->
-                    weekend = that.find("td[data-day=#{value}]").not ".#{self.classes.muted}, .#{self.classes.today}, .#{self.classes.holiday}"
+                    weekend = that.find(".#{self.classes.date}[data-day=#{value}]").not ".#{self.classes.muted}, .#{self.classes.today}, .#{self.classes.holiday}"
                     weekend.addClass self.classes.weekend
 
         addWeekNumbers: =>
@@ -883,12 +902,12 @@
             month = calendarInner.data 'month'
             year = calendarInner.data 'year'
             weekNum = 1
-            weeks = if self.view is 'month' then calendarInner.find('tbody').find 'tr.drm-week' else calendarInner.find 'tbody.drm-week'
+            weeks = calendarInner.find '.drm-week'
             weekNums = []
 
             $.each self.months, (key, value) ->
-                numberDays = self.getDaysInMonth (key + 1), year
-                firstDay = self.getDayOfWeek key, year, 1
+                numberDays = self.getDaysInMonth key, year
+                firstDay = self.getDayOfWeek key, 1, year
                 dayShift = if firstDay is self.daysPerWeek then 0 else firstDay
                 numberWeeks = self.getWeeksInMonth numberDays, dayShift
                 week = 1
@@ -920,8 +939,8 @@
             weekInfo = self.getDatesInWeek currentMonth, currentDate, currentYear
 
             $.each self.months, (key, value) ->
-                numberDays = self.getDaysInMonth (key + 1), currentYear
-                firstDay = self.getDayOfWeek key, currentYear, 1
+                numberDays = self.getDaysInMonth key, currentYear
+                firstDay = self.getDayOfWeek key, 1, currentYear
                 dayShift = if firstDay is self.daysPerWeek then 0 else firstDay
                 numberWeeks = self.getWeeksInMonth numberDays, dayShift
                 week = 1
@@ -936,6 +955,38 @@
                             weekNums.push weekNum
             weekNumber = weekNums[weekInfo.weekNum]
 
+        advanceDate: (direction) =>
+            calendarInner = @calendar.find "div.#{@calendarInnerClass}"
+            currentMonth = calendarInner.data 'month'
+            currentYear = calendarInner.data 'year'
+            nextYear = currentYear + 1
+            lastYear = currentYear - 1
+            nextMonth = if currentMonth is 11 then 0 else currentMonth + 1
+            lastMonth = if currentMonth is 0 then 11 else currentMonth - 1
+            currentDate = calendarInner.find(".#{@classes.date}").data 'date'
+            
+            if direction is 'prev'
+                lastDayOfPrevMonth = @getDaysInMonth lastMonth, currentYear
+
+                if currentDate is 1
+                    currentDate = lastDayOfPrevMonth
+                    currentYear = if currentMonth is 0 then lastYear else currentYear
+                    currentMonth = lastMonth
+                else
+                    currentDate = currentDate - 1
+
+            else if direction is 'next'
+                lastDayOfMonth = @getDaysInMonth currentMonth, currentYear
+
+                if currentDate is lastDayOfMonth
+                    currentDate = 1
+                    currentYear = if currentMonth is 11 then nextYear else currentYear
+                    currentMonth = nextMonth
+                else
+                    currentDate = currentDate + 1
+
+            if @view is 'date' then @changeCalendar currentMonth, currentDate, currentYear
+
         advanceWeek: (direction) =>
             calendarInner = @calendar.find "div.#{@calendarInnerClass}"
             currentMonth = calendarInner.data 'month'
@@ -946,28 +997,44 @@
             lastMonth = if currentMonth is 0 then 11 else currentMonth - 1
             
             if direction is 'prev'
-                firstDay = calendarInner.find('td.drm-date').first().data 'date'
-                lastDayOfPrevMonth = @getDaysInMonth lastMonth + 1, currentYear
+                firstDay = calendarInner.find(".#{@classes.date}").first().data 'date'
+                lastDayOfPrevMonth = @getDaysInMonth lastMonth, currentYear
 
-                if firstDay is 1
+                if firstDay is 1 and @view is 'week'
                     currentDate = lastDayOfPrevMonth
                     currentYear = if currentMonth is 0 then lastYear else currentYear
                     currentMonth = lastMonth
-                else
+                else if firstDay < 7 and @view is 'week'
                     currentDate = firstDay - 1
+                else if firstDay is 1 and @view is 'date'
+                    currentDate = lastDayOfPrevMonth - 6 # 30 - 6 1 24
+                    currentYear = if currentMonth is 0 then lastYear else currentYear
+                    currentMonth = lastMonth
+                else if firstDay < 7 and @view is 'date'
+                    currentDate = lastDayOfPrevMonth - (7 - firstDay) # 31 - (7 - 3) = 27 27  28 - (7 - 6) = 27 6 27
+                    currentYear = if currentMonth is 0 then lastYear else currentYear
+                    currentMonth = lastMonth
+                else
+                    currentDate = firstDay - 7
 
             else if direction is 'next'
-                lastDay = calendarInner.find('td.drm-date').last().data 'date'
-                lastDayOfMonth = @getDaysInMonth currentMonth + 1, currentYear
+                lastDay = calendarInner.find(".#{@classes.date}").last().data 'date'
+                lastDayOfMonth = @getDaysInMonth currentMonth, currentYear
 
-                if lastDay is lastDayOfMonth
+                if lastDay is lastDayOfMonth and @view is 'week'
                     currentDate = 1
                     currentYear = if currentMonth is 11 then nextYear else currentYear
                     currentMonth = nextMonth
+                else if (lastDay + 7 > lastDayOfMonth) and @view is 'week'
+                    currentDate = lastDayOfMonth
+                else if (lastDay + 7 > lastDayOfMonth) and @view is 'date'
+                    currentDate = 7 - (lastDayOfMonth - lastDay) # 31 - 29 = 2 then 7 - 2 = 5
+                    currentYear = if currentMonth is 11 then nextYear else currentYear
+                    currentMonth = nextMonth
                 else
-                    currentDate = lastDay + 1
+                    currentDate = lastDay + 7
 
-            @changeCalendar currentMonth, currentDate, currentYear
+            if @view is 'date' or @view is 'week' then @changeCalendar currentMonth, currentDate, currentYear
 
         advanceMonth: (direction) =>
             calendarInner = @calendar.find "div.#{@calendarInnerClass}"
@@ -1003,15 +1070,15 @@
         createMonthView: (currentMonth, currentYear) =>
             self = @
             self.calendarInnerClass = "drm-calendar-#{self.view}-view"
-            numberDays = self.getDaysInMonth (currentMonth + 1), currentYear
-            prevMonthNumberDays = self.getDaysInMonth currentMonth, currentYear
-            firstDay = self.getDayOfWeek currentMonth, currentYear, 1
+            numberDays = self.getDaysInMonth currentMonth, currentYear
+            firstDay = self.getDayOfWeek currentMonth, 1, currentYear
             dayShift = if firstDay is self.daysPerWeek then 0 else firstDay
             numberWeeks = self.getWeeksInMonth numberDays, dayShift
             nextYear = currentYear + 1
             lastYear = currentYear - 1
             nextMonth = if currentMonth is 11 then 0 else currentMonth + 1
             lastMonth = if currentMonth is 0 then 11 else currentMonth - 1
+            prevMonthNumberDays = self.getDaysInMonth lastMonth, currentYear
             calendar = null
             heading = null
             weekdays = null
@@ -1022,7 +1089,7 @@
                 weekdays += "<th>#{value}</th>"
             weekdays += '</tr></thead>'
 
-            weeks = "<tbody class='drm-month'>"
+            weeks = "<tbody class='#{self.classes.month}'>"
             i = 1
             currentDate = 1
             l = 1
@@ -1031,7 +1098,7 @@
 
             while i <= numberWeeks
                 j = 1
-                weeks += "<tr class='drm-week'>"
+                weeks += "<tr class='#{self.classes.week}'>"
                 # if we are in week 1 we need to shift to the correct day of the week
                 if i is 1 and firstDay isnt 0
                     # add cells for the previous month until we get to the first day
@@ -1042,7 +1109,7 @@
                         j += 1
                     # start adding cells for the current month
                     while j <= self.daysPerWeek
-                        weeks += "<td class='drm-date' data-month='#{currentMonth}' data-date='#{currentDate}' data-year='#{currentYear}' data-day='#{j - 1}'>#{currentDate}</td>"
+                        weeks += "<td class='#{self.classes.date}' data-month='#{currentMonth}' data-date='#{currentDate}' data-year='#{currentYear}' data-day='#{j - 1}'>#{currentDate}</td>"
                         j += 1
                         currentDate += 1
                 # if we are in the last week of the month we need to add blank cells for next month
@@ -1050,7 +1117,7 @@
                     while j <= self.daysPerWeek
                         # finish adding cells for the current month
                         if currentDate <= numberDays
-                            weeks += "<td class='drm-date' data-month='#{currentMonth}' data-date='#{currentDate}' data-year='#{currentYear}' data-day='#{j - 1}'>#{currentDate}</td>"
+                            weeks += "<td class='#{self.classes.date}' data-month='#{currentMonth}' data-date='#{currentDate}' data-year='#{currentYear}' data-day='#{j - 1}'>#{currentDate}</td>"
                         # start adding cells for next month
                         else
                             weeks += "<td class='#{self.classes.muted}' data-day='#{j}'>#{nextDates}</td>"
@@ -1060,7 +1127,7 @@
                 else
                     # if we are in the middle of the month add cells for the current month
                     while j <= self.daysPerWeek
-                        weeks += "<td class='drm-date' data-month='#{currentMonth}' data-date='#{currentDate}' data-year='#{currentYear}' data-day='#{j - 1}'>#{currentDate}</td>"
+                        weeks += "<td class='#{self.classes.date}' data-month='#{currentMonth}' data-date='#{currentDate}' data-year='#{currentYear}' data-day='#{j - 1}'>#{currentDate}</td>"
                         j += 1
                         currentDate += 1
                 weeks += '</tr>'
@@ -1093,18 +1160,21 @@
             $('.drm-calendar-month-prev').text self.months[lastMonth]
             $('.drm-calendar-month-next').text self.months[nextMonth]
 
+            $('.drm-calendar-week-prev, .drm-calendar-week-next').hide()
+            $('.drm-calendar-date-prev, .drm-calendar-date-next').hide()
+
         createWeekView: (currentMonth, currentDate, currentYear) =>
             self = @
             self.calendarInnerClass = "drm-calendar-#{self.view}-view"
-            numberDays = self.getDaysInMonth (currentMonth + 1), currentYear
-            prevMonthNumberDays = self.getDaysInMonth currentMonth, currentYear
-            firstDay = self.getDayOfWeek currentMonth, currentYear, 1
+            numberDays = self.getDaysInMonth currentMonth, currentYear
+            firstDay = self.getDayOfWeek currentMonth, 1, currentYear
             dayShift = if firstDay is self.daysPerWeek then 0 else firstDay
             numberWeeks = self.getWeeksInMonth numberDays, dayShift
             nextYear = currentYear + 1
             lastYear = currentYear - 1
             nextMonth = if currentMonth is 11 then 0 else currentMonth + 1
             lastMonth = if currentMonth is 0 then 11 else currentMonth - 1
+            prevMonthNumberDays = self.getDaysInMonth lastMonth, currentYear
             calendar = null
             heading = null
             weekdays = null
@@ -1139,28 +1209,28 @@
                         dates.month = nextMonth
                 dates
 
-            weekdays = "<table><thead><tr>"
-            weekdays += "<th></th>"
+            weekdaysHtml = "<thead><tr><th></th>"
             $.each self.days, (key, value) ->
                 dates = getDates datesInWeek, key
-                weekdays += "<th>#{value}<br>#{self.months[dates.month]} #{dates.date}</th>"
-            weekdays += '</tr></thead>'
+                weekdaysHtml += "<th>#{value}<br>#{self.months[dates.month]} #{dates.date}</th>"
+            weekdaysHtml += '</tr></thead>'
 
-            week = "<tbody class='drm-week #{weekClass}' data-week='#{weekNumber}'>"
-
+            weekHtml = "<tbody class='#{self.classes.week} #{weekClass}' data-week='#{weekNumber}'>"
             $.each self.hours, (key, value) ->
                 hour = value.name
-                week += '<tr>'
-                week += "<td><span class='hour'>#{hour}</span></td>"
+                weekHtml += "<tr><td><span class='hour'>#{hour}</span></td>"
                 $.each self.days, (key, value) ->
                     dates = getDates datesInWeek, key
-                    week += "<td class='drm-date' data-month='#{dates.month}' data-date='#{dates.date}' data-year='#{currentYear}' data-day='#{key}' data-hour='#{hour}'></td>"
-                week += '</tr>'
-            week += '</tbody></table>'
+                    weekHtml += "<td class='#{self.classes.date}' data-month='#{dates.month}' data-date='#{dates.date}' data-year='#{currentYear}' data-day='#{key}' data-hour='#{hour}'></td>"
+                weekHtml += '</tr>'
+            weekHtml += '</tbody>'
+
+            weekView = $ '<table></table>',
+                html: weekdaysHtml + weekHtml
 
             calendar = $ '<div></div>',
                 class: self.calendarInnerClass
-                html: weekdays + week
+                html: weekView
                 'data-month': currentMonth
                 'data-year': currentYear
 
@@ -1187,22 +1257,56 @@
             $('.drm-calendar-month-prev').text self.months[lastMonth]
             $('.drm-calendar-month-next').text self.months[nextMonth]
 
+            $('.drm-calendar-week-prev, .drm-calendar-week-next').show()
+            $('.drm-calendar-date-prev, .drm-calendar-date-next').hide()
+
         createDateView: (currentMonth, currentDate, currentYear) =>
             self = @
             self.calendarInnerClass = "drm-calendar-#{self.view}-view"
+            day = self.getDayOfWeek currentMonth, currentDate, currentYear
+            weekNumber = self.getWeekNumber currentMonth, currentDate, currentYear
+            weekClass = if weekNumber % 2 is 0 then 'even-week' else 'odd-week'
+            nextYear = currentYear + 1
+            lastYear = currentYear - 1
+            nextMonth = if currentMonth is 11 then 0 else currentMonth + 1
+            lastMonth = if currentMonth is 0 then 11 else currentMonth - 1
+
+            dayListHtml = "<ul class='drm-week drm-day #{weekClass}' data-week='#{weekNumber}'>"
+            $.each self.hours, (key, value) ->
+                hour = value.name
+                dayListHtml += "<li class='#{self.classes.date}' data-month='#{currentMonth}' data-date='#{currentDate}' data-year='#{currentYear}' data-day='#{day}' data-hour='#{hour}'><span class='hour'>#{hour}</span></li>"
+            dayListHtml += '</ul>'
 
             calendar = $ '<div></div>',
                 class: self.calendarInnerClass
-                text: 'Day View'
                 'data-month': currentMonth
                 'data-year': currentYear
+                html: dayListHtml
+
+            headingText = 
+                if currentMonth is self.currentMonth and currentDate is self.currentDate and currentYear is self.currentYear
+                    "Today, #{self.days[day]}, #{self.months[currentMonth]} #{currentDate} #{currentYear}"
+                else
+                    "#{self.days[day]}, #{self.months[currentMonth]} #{currentDate} #{currentYear}"
 
             heading = $ '<h1></h1>',
                 class: 'drm-calendar-header'
-                text: "#{@months[currentMonth]} #{currentDate} #{currentYear}"
+                text: headingText
             
             calendar.appendTo ".#{self.calendarClass}"
             heading.prependTo ".#{self.calendarInnerClass}"
+
+            $.each self.events, (key, value) ->
+                self.addEventsToCalendar value
+
+            $('.drm-calendar-year-prev').text lastYear
+            $('.drm-calendar-year-next').text nextYear
+
+            $('.drm-calendar-month-prev').text self.months[lastMonth]
+            $('.drm-calendar-month-next').text self.months[nextMonth]
+
+            $('.drm-calendar-week-prev, .drm-calendar-week-next').show()
+            $('.drm-calendar-date-prev, .drm-calendar-date-next').show()
 
         createCalendar: (month, date, year) =>
             self = @
@@ -1210,7 +1314,7 @@
             switch self.view
                 when 'month' then self.createMonthView month, year
                 when 'week' then self.createWeekView month, date, year
-                when 'day' then self.createDateView month, date, year
+                when 'date' then self.createDateView month, date, year
 
     drmCalendar = new DrmCalendar()
     drmCalendar.createEvent
@@ -1268,6 +1372,26 @@
         month: "May"
         year: 2014
         time: '1:00pm'
+        eventDate: 4
+        type: "test"
+        recurrance: "none"
+        allDayEvent: false
+        note: "do this once"
+    drmCalendar.createEvent
+        name: "Later That Day"
+        month: "May"
+        year: 2014
+        time: '1:30pm'
+        eventDate: 4
+        type: "test"
+        recurrance: "none"
+        allDayEvent: false
+        note: "do this once"
+    drmCalendar.createEvent
+        name: "Another One Time Event"
+        month: "May"
+        year: 2014
+        time: '2:30pm'
         eventDate: 4
         type: "test"
         recurrance: "none"
