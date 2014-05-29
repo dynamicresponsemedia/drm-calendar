@@ -208,7 +208,7 @@
                "recurrance": "yearly",
                "endRecurrance": "never",
                "allDayEvent": true,
-               "notes": null,
+               "notes": null
           },
           {
                "name": "Independence Day",
