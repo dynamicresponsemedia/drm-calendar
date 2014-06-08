@@ -11,7 +11,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -25,7 +24,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -39,7 +37,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -53,7 +50,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -67,7 +63,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -81,7 +76,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -95,7 +89,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -109,7 +102,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -123,7 +115,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -137,7 +128,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -151,7 +141,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -165,7 +154,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -179,7 +167,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -193,7 +180,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -207,7 +193,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -221,7 +206,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -235,7 +219,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -249,7 +232,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -263,7 +245,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -277,7 +258,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -291,7 +271,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -305,7 +284,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -319,7 +297,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -333,7 +310,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -347,7 +323,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -361,7 +336,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -375,7 +349,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           },
           {
@@ -389,7 +362,6 @@
                "type": "holiday",
                "recurrance": "yearly",
                "endRecurrance": "never",
-               "allDayEvent": true,
                "notes": null
           }
      ]
