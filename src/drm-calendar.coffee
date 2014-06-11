@@ -414,6 +414,7 @@
                 # parse form data
                 $.each currentDate, (key, value) ->
                     value = parseInt value, 10
+                    value
 
                 # change calendar view
                 self.changeCalendar.call self, currentDate.month, currentDate.date, currentDate.year
@@ -546,6 +547,7 @@
                 eventWeekNum = parseInt(dayNum, 10) - 1
 
             eventWeekNum = if dayShift <= day then eventWeekNum else eventWeekNum + 1
+            eventWeekNum
 
         getDatesInWeek: (currentMonth, currentDate, currentYear) =>
             firstDay = @getDayOfWeek currentMonth, 1, currentYear
@@ -572,7 +574,9 @@
                         dates.push j
                 else if i < numberWeeks
                     if i is 2 then date = daysInFirstWeek
-                    $.each @days, (key, value) ->
+                    j = 0
+                    while j < @daysPerWeek
+                        j = j + 1
                         date = date + 1
                         dates.push date
                 else if i is numberWeeks
@@ -601,7 +605,7 @@
                 numberWeeks = self.getWeeksInMonth currentMonth, currentYear
                 week = 1
                 if $.isNumeric numberWeeks
-                    until week > numberWeeks
+                    while week <= numberWeeks
                         if week is 1 and firstDay isnt 0
                             weekNum = weekNum
                         else
@@ -610,6 +614,7 @@
                         if currentMonth is key
                             weekNums.push weekNum
             weekNumber = weekNums[weekInfo.weekNum]
+            weekNumber
 
         createEvent: (newEvent) =>
             id = @events.length
@@ -638,6 +643,7 @@
             $.each @events, (key, value) ->
                 if value.id is eventId
                     index = key
+                index
             index
 
         showEventDetails: (eventId, fullDate) =>
@@ -701,10 +707,11 @@
                 eventHolder.appendTo lightboxHtml
                 eventDetailList.appendTo eventHolder
                 $.each eventDetails, (key, value) ->
-                    title = self.capitalize key
-                    listItem = $ '<li></li>',
-                        html: "<span class='drm-bold'>#{title}: </span><span class='drm-event-detail'>#{value}</span>"
-                    listItem.appendTo eventDetailList
+                    if value?
+                        title = self.capitalize key
+                        listItem = $ '<li></li>',
+                            html: "<span class='drm-bold'>#{title}: </span><span class='drm-event-detail'>#{value}</span>"
+                        listItem.appendTo eventDetailList
 
                 closeButton.appendTo eventDetailList
                 editButton.appendTo eventDetailList
@@ -833,7 +840,7 @@
 
                 if length is 0
                     eventList = $ '<ul></ul>',
-                        class: self.eventClass
+                        class: "#{self.eventClass}"
 
                     eventList.appendTo calendarItem
                 
@@ -976,6 +983,7 @@
             @changeCalendar currentMonth, currentDate, currentYear
             # change calendar class
             @calendarInnerClass = "drm-calendar-#{view}-view"
+            @calendarInnerClass
 
         changeCalendar: (month, date, year) =>
             self = @

@@ -224,3 +224,4 @@ dwsync.xml
 /.sass-cache/
 
 /dist/
+.npmignore
