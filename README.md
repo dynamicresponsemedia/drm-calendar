@@ -1,6 +1,9 @@
 # DRM Calendar
 
-A jQuery calendar
+[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+
+A jQuery powered event calendar
+Requires jQuery
 
 ## Features
 

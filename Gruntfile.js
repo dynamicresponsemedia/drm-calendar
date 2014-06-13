@@ -118,6 +118,6 @@ module.exports = function(grunt) {
 
     // Default task(s).
     grunt.registerTask('default', ['clean:build', 'copy', 'coffee', 'jshint', 'clean:postbuild', 'watch']);
-    grunt.registerTask('build', ['clean:build', 'copy', 'coffee', 'jshint', 'clean:postbuild'])
+    grunt.registerTask('build', ['clean:build', 'copy', 'coffee', 'jshint', 'uglify', 'clean:postbuild'])
 
 };
