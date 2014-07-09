@@ -3,366 +3,235 @@
            {
                "name": "New Year's Day",
                "month": "January",
-               "year": null,
                "eventDate": 1,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Martin Luther King's Birthday",
                "month": "January",
-               "year": null,
-               "eventDate": null,
                "day": ["Monday"],
-               "time": null,
                "dayNum": 3,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Groundhog Day",
                "month": "February",
-               "year": null,
                "eventDate": 2,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Valentine's Day",
                "month": "February",
-               "year": null,
                "eventDate": 14,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "President's Day",
                "month": "February",
-               "year": null,
-               "eventDate": null,
                "day": ["Monday"],
-               "time": null,
                "dayNum": 3,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "St. Patrick's Day",
                "month": "March",
-               "year": null,
                "eventDate": 17,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "April Fool's Day",
                "month": "April",
-               "year": null,
                "eventDate": 1,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Earth Day",
                "month": "April",
-               "year": null,
                "eventDate": 22,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Arbor Day",
                "month": "April",
-               "year": null,
-               "eventDate": null,
                "day": ["Friday"],
-               "time": null,
                "dayNum": "last",
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "May Day",
                "month": "May",
-               "year": null,
                "eventDate": 1,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Cinco De Mayo",
                "month": "May",
-               "year": null,
                "eventDate": 5,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Mother's Day",
                "month": "May",
-               "year": null,
-               "eventDate": null,
                "day": ["Sunday"],
-               "time": null,
                "dayNum": 2,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Memorial Day",
                "month": "May",
-               "year": null,
-               "eventDate": null,
                "day": ["Monday"],
-               "time": null,
                "dayNum": "last",
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Flag Day",
                "month": "June",
-               "year": null,
                "eventDate": 14,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Father's Day",
                "month": "June",
-               "year": null,
-               "eventDate": null,
                "day": ["Sunday"],
-               "time": null,
                "dayNum": 3,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Independence Day",
                "month": "July",
-               "year": null,
                "eventDate": 4,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Labor Day",
                "month": "September",
-               "year": null,
-               "eventDate": null,
                "day": ["Monday"],
-               "time": null,
                "dayNum": 1,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Patroit Day",
                "month": "September",
-               "year": null,
                "eventDate": 11,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Columbus Day",
                "month": "October",
-               "year": null,
-               "eventDate": null,
                "day": ["Monday"],
-               "time": null,
                "dayNum": 2,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Halloween",
                "month": "October",
-               "year": null,
                "eventDate": 31,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Veteran's Day",
                "month": "November",
-               "year": null,
                "eventDate": 11,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Thanksgiving",
                "month": "November",
-               "year": null,
-               "eventDate": null,
                "day": ["Thursday"],
-               "time": null,
                "dayNum": 4,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Pearl Harbor Day",
                "month": "December",
-               "year": null,
                "eventDate": 7,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Festivus",
                "month": "December",
-               "year": null,
                "eventDate": 23,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Christmas Eve",
                "month": "December",
-               "year": null,
                "eventDate": 24,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Christmas",
                "month": "December",
-               "year": null,
                "eventDate": 25,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "Boxing Day",
                "month": "December",
-               "year": null,
                "eventDate": 26,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           },
           {
                "name": "New Year's Eve",
                "month": "December",
-               "year": null,
                "eventDate": 31,
-               "day": null,
-               "time": null,
-               "dayNum": null,
                "type": "holiday",
                "recurrance": "yearly",
-               "endRecurrance": "never",
-               "notes": null
+               "endRecurrance": "never"
           }
      ]
 }
