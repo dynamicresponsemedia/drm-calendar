@@ -1,6 +1,6 @@
 {
     "name": "elr-calendar",
-    "version": "1.0.0",
+    "version": "0.0.0",
     "description": "calendar",
     "main": "dist/elr-calendar.js",
     "scripts": {
