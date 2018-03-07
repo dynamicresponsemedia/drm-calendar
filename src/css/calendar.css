@@ -1,0 +1,90 @@
+.elr-calendar-view-nav,
+.elr-calendar-nav {
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.elr-calendar-view-nav button:first-child,
+.elr-calendar-nav button:first-child {
+  border-radius: 3px 0 0 3px;
+}
+
+.elr-calendar-view-nav button:last-child,
+.elr-calendar-nav button:last-child {
+  border-radius: 0 3px 3px 0;
+}
+
+.elr-calendar-view-nav button,
+.elr-calendar-nav button {
+  display: block;
+  min-width: 150px;
+  cursor: pointer;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: 700;
+  transition: background-color 0.3s;
+}
+
+.elr-calendar-view-nav button:hover,
+.elr-calendar-nav button:hover {
+  background-color: #444;
+}
+
+.elr-calendar-view-nav button.active {
+  background-color: #444;
+}
+
+.elr-month {
+  border: 1px solid #eee;
+}
+
+.elr-week.even-week {
+  background-color: mistyrose;
+}
+
+.elr-calendar-heading {
+  display: flex;
+  justify-content: space-around;
+}
+
+.elr-week {
+  display: flex;
+  justify-content: space-around;
+  height: 100px;
+  border-bottom: 1px solid #eee;
+}
+
+.elr-week:last-of-type {
+  border-bottom: 0;
+}
+
+.elr-week > div {
+  flex-shrink: 1;
+  flex-grow: 1;
+  padding: 5px;
+  flex: 1;
+  /*background-color: red;*/
+}
+
+.elr-cal-muted {
+  background-color: #eee;
+}
+
+.elr-cal-weekend {
+  background-color: lightpink;
+}
+
+.elr-cal-today {
+  background-color: paleturquoise;
+}
+
+.elr-event-list {
+  list-style: none;
+}
+
+.elr-event-list li a {
+  font-size: 13px;
+}
