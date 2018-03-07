@@ -24,7 +24,7 @@ beforeEach(() => {
   $cal = $('.elr-calendar')
 })
 
-xdescribe('renderMonth', () => {
+describe('renderMonth', () => {
   it('should display a month', () => {
     elrMonths.renderMonth(renderDate, $cal, evts)
 

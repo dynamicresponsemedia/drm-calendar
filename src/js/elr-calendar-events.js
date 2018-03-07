@@ -24,7 +24,7 @@ const getFirstDate = $week => {
 }
 
 //gets the week of the month when an event occurs
-const getEventWeekNum = (evt, year = this.today().year) => {
+const getEventWeekNum = (evt, year, evtDay) => {
   // gets the week of the month which an event occurs
   // TODO: add 'second', 'third', 'fourth' keywords
   const dateObj = {
@@ -36,19 +36,16 @@ const getEventWeekNum = (evt, year = this.today().year) => {
   const firstDay = elrTime.getFirstDayOfMonth(dateObj)
   const numberWeeks = elrTime.getWeeksInMonth(dateObj)
   const lastWeekLength = elrTime.getLastWeekLength(dateObj)
-  const dayNum = evt.dayNum
-  const day = elrTime.days.indexOf(evt.day[0])
+  const day = elrTime.days.indexOf(evtDay)
 
-  if (dayNum === 'last' || dayNum === numberWeeks) {
+  if (evt.dayNum === 'last' || evt.dayNum === numberWeeks) {
     // check if last week in month contains day
     if (lastWeekLength >= day) {
       return numberWeeks
     }
 
     return numberWeeks - 1
-  }
-
-  if (dayNum === 'first' || dayNum === 1) {
+  } else if (evt.dayNum === 'first' || evt.dayNum === 1) {
     // check if first week in month contains day
     if (firstDay <= day) {
       return 1
@@ -58,11 +55,11 @@ const getEventWeekNum = (evt, year = this.today().year) => {
   }
 
   // check if you should count from 1st or 2nd week of month
-  if (this.getFirstDayOfMonth(dateObj) > day) {
-    return dayNum + 1
+  if (elrTime.getFirstDayOfMonth(dateObj) > day) {
+    return evt.dayNum + 1
   }
 
-  return dayNum
+  return evt.dayNum
 }
 
 const getDates = function(month, year, eventWeekNum, day) {
@@ -95,7 +92,7 @@ const addYearlyEvents = (evt, $calendarInner) => {
       const month = $calendarInner.data('month')
       const year = $calendarInner.data('year')
       const weeks = $calendarInner.find('.elr-week')
-      const eventWeekNum = getEventWeekNum(evt, year)
+      const eventWeekNum = getEventWeekNum(evt, year, o)
 
       weeks.each(function() {
         const dates = getDates.call($(this), month, year, eventWeekNum, day)
@@ -124,12 +121,9 @@ const addMonthlyEvents = (evt, $calendarInner) => {
       const month = $calendarInner.data('month')
       const year = $calendarInner.data('year')
       const day = elrTime.days.indexOf(o)
-      console.log(evt)
 
       // evt.month = elrTime.months[month]
-      eventWeekNum = getEventWeekNum(evt, year)
-
-      console.log(`${o} ${eventWeekNum}`)
+      eventWeekNum = getEventWeekNum(evt, year, o)
 
       $weeks.each(function() {
         const $week = $(this)

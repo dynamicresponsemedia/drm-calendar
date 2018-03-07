@@ -13,7 +13,7 @@ beforeEach(() => {
   document.body.innerHTML = html
 })
 
-xdescribe('init', () => {
+describe('init', () => {
   it('should render a calendar', () => {
     calendar.init()
     expect($('.elr-calendar-month-view').length).toBe(1)
@@ -270,7 +270,9 @@ xdescribe('init', () => {
         year: 2018
       }
     })
-    expect($('.elr-calendar .elr-week:nth-child(2) > div:first-child').html()).toMatchSnapshot()
+    expect(
+      $('.elr-calendar .elr-week:nth-child(2) > div:first-child').html()
+    ).toMatchSnapshot()
   })
   it('should create the first week of a month', () => {
     calendar.init({

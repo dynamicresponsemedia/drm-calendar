@@ -43,7 +43,7 @@ describe('addEvents', () => {
     elrMonths.renderMonth(renderDate, $cal, evts)
 
     const evt = {
-      name: 'St. Patrick\'s Day',
+      name: "St. Patrick's Day",
       month: 'March',
       eventDate: 17,
       type: 'holiday',
@@ -68,7 +68,7 @@ describe('addEvents', () => {
 
     expect(events).toEqual([6])
   })
-  it.only('should create an array of dates for a monthly event with multiple days', () => {
+  it('should create an array of dates for a monthly event with multiple days', () => {
     elrMonths.renderMonth(renderDate, $cal, evts)
 
     const evt = {
