@@ -87,7 +87,7 @@ const addYearlyEvents = (evt, $calendarInner) => {
   // need to add support for multi-day events
   const evtDates = []
   if (evt.day) {
-    evt.day.map(function(o) {
+    evt.day.map(o => {
       const day = elrTime.days.indexOf(o)
       const month = $calendarInner.data('month')
       const year = $calendarInner.data('year')
@@ -119,7 +119,7 @@ const addMonthlyEvents = (evt, $calendarInner) => {
   // events that occur on a specific day of the week
   // eg. event occurs on the first Tuesday of every month
   if (evt.day) {
-    evt.day.forEach(o => {
+    evt.day.map(o => {
       const month = $calendarInner.data('month')
       const year = $calendarInner.data('year')
       const day = elrTime.days.indexOf(o)
@@ -151,7 +151,7 @@ const addBiWeeklyEvents = (evt, $calendarInner) => {
   const $weeks = $calendarInner.find('.elr-week')
   const evtDates = []
 
-  evt.day.map(function(o) {
+  evt.day.map(o => {
     const day = elrTime.days.indexOf(o)
 
     $weeks.each(function() {
@@ -169,12 +169,32 @@ const addBiWeeklyEvents = (evt, $calendarInner) => {
     })
   })
 
-  return evtDates // [9, 23]
+  return evtDates
 }
 
 // these events occur every week
 // can be multiple days eg. Monday, Wendesday, Friday or Weekends
-const addWeeklyEvents = (evts, eventDates) => {}
+const addWeeklyEvents = (evt, $calendarInner) => {
+  const $weeks = $calendarInner.find('.elr-week')
+  const evtDates = []
+
+  evt.day.map(o => {
+    const day = elrTime.days.indexOf(o)
+
+    $weeks.each(function() {
+      const $week = $(this)
+
+      const evtDate = $week.find(`.${classes.date}[data-day="${day}"]`)
+
+      if (evtDate.length) {
+        const date = evtDate.data('date')
+        evtDates.push(date)
+      }
+    })
+  })
+
+  return evtDates
+}
 
 // these events occur every day
 // can be all day events or can occur at a set time
@@ -226,11 +246,11 @@ export default {
     } else if (evt.recurrance === 'biweekly') {
       return addBiWeeklyEvents(evt, $calendarInner)
     } else if (evt.recurrance === 'weekly') {
-      addWeeklyEvents(evt, $calendarInner)
+      return addWeeklyEvents(evt, $calendarInner)
     } else if (evt.recurrance === 'daily') {
-      addDailyEvents(evt, $calendarInner)
+      return addDailyEvents(evt, $calendarInner)
     } else if (evt.recurrance === 'one-time') {
-      addOneTimeEvents(evt, $calendarInner)
+      return addOneTimeEvents(evt, $calendarInner)
     } else if (evt.recurrance === 'yearly') {
       // console.log(`event does not occur in this month: ${evt.name}`);
       return

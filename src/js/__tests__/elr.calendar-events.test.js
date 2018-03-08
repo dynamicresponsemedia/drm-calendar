@@ -67,7 +67,7 @@ describe('addEvents', () => {
 
     const events = elrEvents.addEvents(evt, $cal, 'month')
 
-    expect(events).toEqual([2, 3, 4])
+    expect(events).toEqual(expect.arrayContaining([2, 3, 4]))
   })
   it('should create an array of dates for a monthly event', () => {
     elrMonths.renderMonth(renderDate, $cal, evts)
@@ -95,7 +95,7 @@ describe('addEvents', () => {
 
     const events = elrEvents.addEvents(evt, $cal, 'month')
 
-    expect(events).toEqual([2, 3, 4])
+    expect(events).toEqual(expect.arrayContaining([2, 3, 4]))
   })
   it('should create an array of events that occur every 2 weeks', () => {
     elrMonths.renderMonth(renderDate, $cal, evts)
@@ -109,7 +109,7 @@ describe('addEvents', () => {
 
     const events = elrEvents.addEvents(evt, $cal, 'month')
 
-    expect(events).toEqual([9, 23])
+    expect(events).toEqual(expect.arrayContaining([9, 23]))
   })
   it('should add biweekly multi-day events', () => {
     elrMonths.renderMonth(renderDate, $cal, evts)
@@ -124,5 +124,33 @@ describe('addEvents', () => {
     const events = elrEvents.addEvents(evt, $cal, 'month')
 
     expect(events).toEqual(expect.arrayContaining([1, 13, 14, 15, 27, 28, 29]))
+  })
+  it('should add events that occur every week', () => {
+    elrMonths.renderMonth(renderDate, $cal, evts)
+
+    const evt = {
+      name: 'Work from Home',
+      day: ['Thursday'],
+      recurrance: 'weekly'
+    }
+
+    const events = elrEvents.addEvents(evt, $cal, 'month')
+
+    expect(events).toEqual(expect.arrayContaining([1, 8, 15, 22, 29]))
+  })
+  it('should add multiday weekly events', () => {
+    elrMonths.renderMonth(renderDate, $cal, evts)
+
+    const evt = {
+      name: 'Weekend',
+      day: ['Saturday', 'Sunday'],
+      recurrance: 'weekly'
+    }
+
+    const events = elrEvents.addEvents(evt, $cal, 'month')
+
+    expect(events).toEqual(
+      expect.arrayContaining([3, 4, 10, 11, 17, 18, 24, 25, 31])
+    )
   })
 })
