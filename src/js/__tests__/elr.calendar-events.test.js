@@ -54,6 +54,21 @@ describe('addEvents', () => {
 
     expect(events).toEqual([17])
   })
+  it('should create an array of dates for a yearly event with multiple days', () => {
+    elrMonths.renderMonth(renderDate, $cal, evts)
+
+    const evt = {
+      name: 'Fun Weekend',
+      month: 'March',
+      day: ['Friday', 'Saturday', 'Sunday'],
+      dayNum: 1,
+      recurrance: 'yearly'
+    }
+
+    const events = elrEvents.addEvents(evt, $cal, 'month')
+
+    expect(events).toEqual([2, 3, 4])
+  })
   it('should create an array of dates for a monthly event', () => {
     elrMonths.renderMonth(renderDate, $cal, evts)
 

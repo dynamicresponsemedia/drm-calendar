@@ -105,7 +105,9 @@ const addYearlyEvents = (evt, $calendarInner) => {
     evtDates.push(+evt.eventDate)
   }
 
-  return evtDates
+  return evtDates.reduce((a, b) => {
+    return a.concat(b)
+  }, [])
 }
 
 // these events occur once per month

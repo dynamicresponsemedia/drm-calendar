@@ -8,7 +8,7 @@
     "email": "beth3346@gmail.com"
   },
   "scripts": {
-    "start": "webpack --config webpack.config.js",
+    "dev": "npx webpack --watch",
     "test": "jest",
     "test:watch": "jest --watch"
   },
