@@ -111,4 +111,18 @@ describe('addEvents', () => {
 
     expect(events).toEqual([9, 23])
   })
+  it('should add biweekly multi-day events', () => {
+    elrMonths.renderMonth(renderDate, $cal, evts)
+
+    const evt = {
+      name: 'Midweek',
+      day: ['Tuesday', 'Wednesday', 'Thursday'],
+      week: 'odd',
+      recurrance: 'biweekly'
+    }
+
+    const events = elrEvents.addEvents(evt, $cal, 'month')
+
+    expect(events).toEqual(expect.arrayContaining([1, 13, 14, 15, 27, 28, 29]))
+  })
 })
