@@ -183,7 +183,6 @@ const addWeeklyEvents = (evt, $calendarInner) => {
 
     $weeks.each(function() {
       const $week = $(this)
-
       const evtDate = $week.find(`.${classes.date}[data-day="${day}"]`)
 
       if (evtDate.length) {
@@ -198,11 +197,26 @@ const addWeeklyEvents = (evt, $calendarInner) => {
 
 // these events occur every day
 // can be all day events or can occur at a set time
-const addDailyEvents = (evts, eventDates) => {}
+const addDailyEvents = (evt, $calendarInner) => {
+  const month = $calendarInner.data('month')
+  const year = $calendarInner.data('year')
+  const dates = elrTime.getDaysInMonth({
+    month,
+    year,
+    date: 1
+  })
+  const evtDates = []
+
+  for (let index = 1; index <= dates; index++) {
+    evtDates.push(index)
+  }
+
+  return evtDates
+}
 
 // these events occur once
 // can be all day events or can occur at a set time
-const addOneTimeEvents = (evts, eventDates) => {}
+const addOneTimeEvents = (evt, $calendarInner) => {}
 
 // gets the index of an evt so we can keep track after evts are removed
 const getEventIndex = evtId => {

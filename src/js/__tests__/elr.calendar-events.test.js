@@ -153,4 +153,21 @@ describe('addEvents', () => {
       expect.arrayContaining([3, 4, 10, 11, 17, 18, 24, 25, 31])
     )
   })
+  it('should add daily events', () => {
+    elrMonths.renderMonth(renderDate, $cal, evts)
+
+    const evt = {
+      name: 'A Day',
+      recurrance: 'daily'
+    }
+
+    const events = elrEvents.addEvents(evt, $cal, 'month')
+    const days = []
+
+    for (let index = 1; index <= 31; index++) {
+      days.push(index)
+    }
+
+    expect(events).toEqual(expect.arrayContaining(days))
+  })
 })
