@@ -1,6 +1,6 @@
-import calendar from './js/elr-calendar'
-import './css/main.css'
-import './css/calendar.css'
+import calendar from './js/elr-calendar';
+import './css/main.css';
+import './css/calendar.css';
 
 calendar.init({
   view: 'month',
@@ -16,6 +16,12 @@ calendar.init({
       day: ['Friday'],
       week: 'even',
       recurrance: 'biweekly'
+    },
+    {
+      name: 'Third MWF',
+      recurrance: 'monthly',
+      day: ['Monday', 'Wednesday', 'Friday'],
+      dayNum: 3
     }
   ]
-})
+});
