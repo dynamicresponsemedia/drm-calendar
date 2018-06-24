@@ -8,13 +8,12 @@
     "email": "beth3346@gmail.com"
   },
   "scripts": {
-    "start": "npx webpack --mode='development' --watch",
+    "start": "webpack --config webpack.config.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "build": "npx webpack --mode='production'"
   },
   "devDependencies": {
-    "babel-preset-env": "^1.6.1",
     "css-loader": "^0.28.10",
     "husky": "^1.0.0-rc.9",
     "jest": "^22.4.2",
@@ -23,6 +22,7 @@
     "webpack-cli": "^2.0.9"
   },
   "dependencies": {
+    "babel-preset-env": "^1.6.1",
     "babel-runtime": "^6.26.0",
     "elr-time-utilities": "^1.2.1",
     "elr-utility-lib": "^2.0.1",
