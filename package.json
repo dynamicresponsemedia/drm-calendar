@@ -8,13 +8,15 @@
     "email": "beth3346@gmail.com"
   },
   "scripts": {
-    "dev": "npx webpack --watch",
+    "start": "npx webpack --mode='development' --watch",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "build": "npx webpack --mode='production'"
   },
   "devDependencies": {
     "babel-preset-env": "^1.6.1",
     "css-loader": "^0.28.10",
+    "husky": "^1.0.0-rc.9",
     "jest": "^22.4.2",
     "style-loader": "^0.20.2",
     "webpack": "^4.0.0",
@@ -27,13 +29,16 @@
     "jquery": "^3.3.1"
   },
   "homepage": "http://www.elizabeth-rogers.com/elr-utilities/js-calendar.html",
-  "keywords": [
-    "javascript, jquery, calendar, ui"
-  ],
+  "keywords": ["javascript, jquery, calendar, ui"],
   "license": "MIT",
   "main": "dist/elr-calendar.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/elr-utilities/elr-calendar.git"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn build && yarn test"
+    }
   }
 }
