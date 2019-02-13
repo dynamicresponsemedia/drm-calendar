@@ -1,5 +1,7 @@
 # elr-calendar 
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Beth3346/elr-calendar.svg)](https://greenkeeper.io/)
+
 a basic content calendar
 
 ## Installation
